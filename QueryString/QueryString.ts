@@ -27,14 +27,21 @@ export default class QueryString {
 
         let splitterS:Array<string> = qs.split("&");
 
-        for(let i:number = 0; i < splitterS.length; i++) {
+        loop: for(let i:number = 0; i < splitterS.length; i++) {
             let splitterKV:Array<string> = splitterS[i].split("=");
             
-            if(splitterKV.length === 2 && splitterKV[0].length === 0) {
-                return null;
+            if(splitterKV[0].length === 0) {
+                continue loop;
             }
 
-            parsed[splitterKV[0]] = (splitterKV[1] === undefined ? null : splitterKV[1]);
+            switch(splitterKV.length) {
+                case 1:
+                    parsed[splitterKV[0]] = null;
+                break;
+                case 2:
+                    parsed[splitterKV[0]] = ((splitterKV[1].length > 0) ? splitterKV[1] : null);
+                break;
+            }
         }
 
         return parsed;
